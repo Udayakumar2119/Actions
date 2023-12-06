@@ -1,0 +1,29 @@
+name: Dynamic Greeting Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      selected_workflow:
+        description: 'Select Greeting Workflow'
+        required: true
+        default: 'hello-world'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Run Selected Workflow
+      run: |
+        if [ "${{ github.event.inputs.selected_workflow }}" == "hello-world" ]; then
+          echo "Running Hello World Workflow"
+          # Trigger the Hello World workflow
+          gh workflow run hello-world.yml
+        elif [ "${{ github.event.inputs.selected_workflow }}" == "welcome" ]; then
+          echo "Running Welcome Workflow"
+          # Trigger the Welcome workflow
+          gh workflow run welcome.yml
+        else
+          echo "Invalid workflow selection"
+          exit 1
+        fi
