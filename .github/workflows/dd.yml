@@ -1,11 +1,7 @@
 name: Datadog Installation
 
 on:
-  workflow_run:
-    workflows: ["Fetch and Install Datadog"]
-    types:
-      - completed
-
+  push
 jobs:
   fetch_and_install:
     runs-on: ubuntu-latest
