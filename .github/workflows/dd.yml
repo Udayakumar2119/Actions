@@ -7,7 +7,11 @@ on:
         description: 'Type of workflow to run'
         required: true
         default: 'HA-Internal'
-        options: ['HA-Iternal', 'HA-External', 'DataServices', 'NIFI']
+        options: 
+            - 'HA-Iternal'
+            - 'HA-External'
+            - 'DataServices'
+            - 'NIFI'
 
 jobs:
   run-workflow:
