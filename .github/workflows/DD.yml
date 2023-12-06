@@ -1,81 +1,17 @@
-name: Install Datadog Agent
+name: Welcome Workflow
 
 on:
-  push
+  push:
+    branches:
+      - main
+
 jobs:
-  install-datadog:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Prompt for AKS cluster selection
-      id: cluster_input
-      run: |
-        echo "Which frontend AKS cluster do you want to install Datadog on?"
-        echo "::set-output name=selected_cluster::$(echo -e 'frentend-us-dev\nfrentend-us-qa\nfrentend-us-stg\nfrentend-eu-stg\nfrentend-us-prd\nfrentend-eu-prd' | fzf)"
-
-    - name: Set up cluster-specific environment variables
-      id: set_cluster_env
-      run: |
-        case "${{ steps.cluster_input.outputs.selected_cluster }}" in
-          frentend-us-dev)
-            export VAULT_URL=${{ secrets.VAULT_URL_FRENTEND_US_DEV }}
-            export VAULT_NAMESPACE=${{ secrets.VAULT_NAMESPACE_FRENTEND_US_DEV }}
-            export VAULT_ROLE_ID=${{ secrets.VAULT_ROLE_ID_FRENTEND_US_DEV }}
-            export VAULT_SECRET_ID=${{ secrets.VAULT_SECRET_ID_FRENTEND_US_DEV }}
-            export KUBECONFIG_PATH=path/to/frentend-us-dev/kubeconfig
-            ;;
-          frentend-us-qa)
-            export VAULT_URL=${{ secrets.VAULT_URL_FRENTEND_US_QA }}
-            export VAULT_NAMESPACE=${{ secrets.VAULT_NAMESPACE_FRENTEND_US_QA }}
-            export VAULT_ROLE_ID=${{ secrets.VAULT_ROLE_ID_FRENTEND_US_QA }}
-            export VAULT_SECRET_ID=${{ secrets.VAULT_SECRET_ID_FRENTEND_US_QA }}
-            export KUBECONFIG_PATH=path/to/frentend-us-qa/kubeconfig
-            ;;
-          # Add other cases for different clusters
-          *)
-            echo "Invalid cluster selection"
-            exit 1
-            ;;
-        esac
-        echo "::set-output name=vault_url::$VAULT_URL"
-        echo "::set-output name=vault_namespace::$VAULT_NAMESPACE"
-        echo "::set-output name=vault_role_id::$VAULT_ROLE_ID"
-        echo "::set-output name=vault_secret_id::$VAULT_SECRET_ID"
-        echo "::set-output name=kubeconfig_path::$KUBECONFIG_PATH"
-
-    - name: Install Vault CLI
-      run: |
-        wget https://releases.hashicorp.com/vault/1.9.7/vault_1.9.7_linux_amd64.zip
-        unzip vault_1.9.7_linux_amd64.zip
-        sudo mv vault /usr/local/bin/
-
-    - name: Set up Kubernetes
-      uses: azure/kubernetes-set-context@v0.6.1
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.KUBECONFIG_PATH }}
-        cluster-name: ${{ steps.cluster_input.outputs.selected_cluster }}
-
-    - name: Check Datadog agent version
-      run: |
-        datadog_version=$(helm show chart datadog/datadog | grep -E '^version:' | awk '{print $2}')
-        echo "Datadog Agent version: $datadog_version"
-
-    - name: Install Datadog on the selected cluster
-      run: |
-        kubeconfig=$(vault kv get -field=kubeconfig ${{ steps.kubeconfig_path }})
-
-        helm repo add datadog https://helm.datadoghq.com
-        helm repo update
-
-        helm install datadog-agent -f values.yaml \
-          --set datadog.site='datadoghq.com' \
-          --set datadog.apiKey='${{ secrets.DATADOG_API_KEY }}' \
-          --set datadog.apm.enabled=true \
-          --set datadog.logs.enabled=true \
-          --set datadog.clusterName=${{ steps.cluster_input.outputs.selected_cluster }} \
-          # Add other Datadog Helm chart values as needed \
-          --kubeconfig <(echo "$kubeconfig")
+    - name: Print Welcome Message
+      run: echo "Welcome to GitHub Actions!"
