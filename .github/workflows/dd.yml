@@ -1,45 +1,51 @@
-name: Install Datadog
+name: Datadog Installation
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Fetch and Install Datadog"]
+    types:
+      - completed
 
 jobs:
-  cluster1-job:
+  fetch_and_install:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        cluster: ["dev", "qa", "stg"]
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Install Datadog on Cluster 1
+      - name: Fetch Kubeconfig from Vault
         env:
-          VAULT_URL: ${{ secrets.VAULT_URL_CLUSTER1 }}
-          VAULT_NAMESPACE: ${{ secrets.VAULT_NAMESPACE_CLUSTER1 }}
-          VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID_CLUSTER1 }}
-          VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID_CLUSTER1 }}
-          KUBECONFIG_PATH: ${{ secrets.KUBECONFIG_PATH_CLUSTER1 }}
+          VAULT_URL: ${{ secrets.${{ matrix.cluster | upper }}_VAULT_URL }}
+          VAULT_NAMESPACE: ${{ secrets.${{ matrix.cluster | upper }}_VAULT_NAMESPACE }}
+          VAULT_ROLE_ID: ${{ secrets.${{ matrix.cluster | upper }}_VAULT_ROLE_ID }}
+          VAULT_SECRET_ID: ${{ secrets.${{ matrix.cluster | upper }}_VAULT_SECRET_ID }}
         run: |
-          # Fetch kubeconfig from Vault
-          # Load kubeconfig into the current context
-          # Install Datadog using Helm with values.yaml
+          # Use Vault CLI or another tool to fetch kubeconfig
+          # Example: vault read -namespace=${VAULT_NAMESPACE} -role-id=${VAULT_ROLE_ID} -secret-id=${VAULT_SECRET_ID} ${VAULT_URL}/path/to/kubeconfig > kubeconfig-${{ matrix.cluster }}
+          # Note: Adjust the Vault path and commands as per your setup
+          echo "kubeconfig-${{ matrix.cluster }}" > kubeconfig
 
-  cluster2-job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Install Datadog on Cluster 2
+      - name: Install Datadog Agent
         env:
-          VAULT_URL: ${{ secrets.VAULT_URL_CLUSTER2 }}
-          VAULT_NAMESPACE: ${{ secrets.VAULT_NAMESPACE_CLUSTER2 }}
-          VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID_CLUSTER2 }}
-          VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID_CLUSTER2 }}
-          KUBECONFIG_PATH: ${{ secrets.KUBECONFIG_PATH_CLUSTER2 }}
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
         run: |
-          # Fetch kubeconfig from Vault
-          # Load kubeconfig into the current context
-          # Install Datadog using Helm with values.yaml
+          # Use Helm to install Datadog agent
+          helm repo add datadog https://helm.datadoghq.com
+          helm repo update
+          helm install datadog-agent datadog/datadog \
+            --set datadog.apiKey=${DD_API_KEY} \
+            -f values-${{ matrix.cluster }}.yaml  # You may need to customize Datadog configuration
 
-  # Repeat for other clusters...
+      - name: Check Cluster Status
+        env:
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+        run: |
+          # Use Datadog API or CLI to check cluster status
+          # Example: curl -X GET "https://api.datadoghq.com/api/v1/clusters/${CLUSTER_ID}" -H "Content-Type: application/json" -H "DD-API-KEY: ${DD_API_KEY}"
+          https://pwc-innovation.datadoghq.com/infrastructure?groups=cluster_name&sort=status%2Cdesc&tags=cluster_name%3Ahosted-apps-internal-us-d001
+
