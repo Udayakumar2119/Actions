@@ -1,0 +1,45 @@
+name: Install Datadog
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  cluster1-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Datadog on Cluster 1
+        env:
+          VAULT_URL: ${{ secrets.VAULT_URL_CLUSTER1 }}
+          VAULT_NAMESPACE: ${{ secrets.VAULT_NAMESPACE_CLUSTER1 }}
+          VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID_CLUSTER1 }}
+          VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID_CLUSTER1 }}
+          KUBECONFIG_PATH: ${{ secrets.KUBECONFIG_PATH_CLUSTER1 }}
+        run: |
+          # Fetch kubeconfig from Vault
+          # Load kubeconfig into the current context
+          # Install Datadog using Helm with values.yaml
+
+  cluster2-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Datadog on Cluster 2
+        env:
+          VAULT_URL: ${{ secrets.VAULT_URL_CLUSTER2 }}
+          VAULT_NAMESPACE: ${{ secrets.VAULT_NAMESPACE_CLUSTER2 }}
+          VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID_CLUSTER2 }}
+          VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID_CLUSTER2 }}
+          KUBECONFIG_PATH: ${{ secrets.KUBECONFIG_PATH_CLUSTER2 }}
+        run: |
+          # Fetch kubeconfig from Vault
+          # Load kubeconfig into the current context
+          # Install Datadog using Helm with values.yaml
+
+  # Repeat for other clusters...
