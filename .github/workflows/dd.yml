@@ -1,14 +1,29 @@
-name: Datadog Installation
+name: Datadog Installation On Hostedapps Dev & QA clusters
 
 on:
-  push
+  workflow_dispatch:
+    inputs:
+      manual_run:
+        description: 'Manually trigger Datadog installation'
+        default: 'true'
+      cluster_scope:
+        description: 'Define cluster scope'
+        required: true
+        default: 'internal'
+        options:
+          - 'internal'
+          - 'external'
+  push:
+    branches:
+      - develop        
+
 jobs:
   fetch_and_install:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        cluster: ["dev", "qa", "stg"]
+        cluster: ["us-dev", "us-qa"]
 
     steps:
       - name: Checkout Repository
@@ -21,27 +36,26 @@ jobs:
           VAULT_ROLE_ID: ${{ secrets.${{ matrix.cluster | upper }}_VAULT_ROLE_ID }}
           VAULT_SECRET_ID: ${{ secrets.${{ matrix.cluster | upper }}_VAULT_SECRET_ID }}
         run: |
-          # Use Vault CLI or another tool to fetch kubeconfig
-          # Example: vault read -namespace=${VAULT_NAMESPACE} -role-id=${VAULT_ROLE_ID} -secret-id=${VAULT_SECRET_ID} ${VAULT_URL}/path/to/kubeconfig > kubeconfig-${{ matrix.cluster }}
-          # Note: Adjust the Vault path and commands as per your setup
-          echo "kubeconfig-${{ matrix.cluster }}" > kubeconfig
+          # Log in to Vault and retrieve a token
+          export VAULT_TOKEN=$(vault write -field=token auth/approle/login role_id=${VAULT_ROLE_ID} secret_id=${VAULT_SECRET_ID} | tail -n 1)
+          
+          # Construct Vault path based on cluster_scope
+          VAULT_PATH="hosted-apps-${{ github.event.inputs.cluster_scope }}/cluster"
+
+          # Fetch the kubeconfig from Vault
+          vault read -namespace=${VAULT_NAMESPACE} -field=kubeconfig ${VAULT_URL}/${VAULT_PATH} > kubeconfig-${{ matrix.cluster }}
+
 
       - name: Install Datadog Agent
         env:
           DD_API_KEY: ${{ secrets.DD_API_KEY }}
-        run: |
-          # Use Helm to install Datadog agent
+        run: |    
+          # Replace values.yml    
+          sed -i "s|REPLACE_DD_API_KEY|${DD_API_KEY}|g" /path/to/values-${{ matrix.cluster }}.yaml
+
+          # Use Helm to install Datadog agent            
           helm repo add datadog https://helm.datadoghq.com
           helm repo update
           helm install datadog-agent datadog/datadog \
-            --set datadog.apiKey=${DD_API_KEY} \
-            -f values-${{ matrix.cluster }}.yaml  # You may need to customize Datadog configuration
-
-      - name: Check Cluster Status
-        env:
-          DD_API_KEY: ${{ secrets.DD_API_KEY }}
-        run: |
-          # Use Datadog API or CLI to check cluster status
-          # Example: curl -X GET "https://api.datadoghq.com/api/v1/clusters/${CLUSTER_ID}" -H "Content-Type: application/json" -H "DD-API-KEY: ${DD_API_KEY}"
-          https://pwc-innovation.datadoghq.com/infrastructure?groups=cluster_name&sort=status%2Cdesc&tags=cluster_name%3Ahosted-apps-internal-us-d001
-
+            --set-file values.yaml=/path/to/values-${{ matrix.cluster }}.yaml \
+            --kubeconfig kubeconfig-${{ matrix.cluster }}
