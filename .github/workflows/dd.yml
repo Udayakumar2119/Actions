@@ -1,61 +1,50 @@
-name: Datadog Installation On Hostedapps Dev & QA clusters
+name: Main Workflow
 
 on:
   workflow_dispatch:
     inputs:
-      manual_run:
-        description: 'Manually trigger Datadog installation'
-        default: 'true'
-      cluster_scope:
-        description: 'Define cluster scope'
+      workflowType:
+        description: 'Type of workflow to run'
         required: true
-        default: 'internal'
-        options:
-          - 'internal'
-          - 'external'
-  push:
-    branches:
-      - develop        
+        default: 'HA-Internal'
+        options: ['HA-Iternal', 'HA-External', 'DataServices', 'NIFI']
 
 jobs:
-  fetch_and_install:
+  run-workflow:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        cluster: ["us-dev", "us-qa"]
+        workflowType: ${{ github.event.inputs.workflowType }}
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Fetch Kubeconfig from Vault
-        env:
-          VAULT_URL: ${{ secrets.${{ matrix.cluster | upper }}_VAULT_URL }}
-          VAULT_NAMESPACE: ${{ secrets.${{ matrix.cluster | upper }}_VAULT_NAMESPACE }}
-          VAULT_ROLE_ID: ${{ secrets.${{ matrix.cluster | upper }}_VAULT_ROLE_ID }}
-          VAULT_SECRET_ID: ${{ secrets.${{ matrix.cluster | upper }}_VAULT_SECRET_ID }}
+      - name: Trigger Workflow
         run: |
-          # Log in to Vault and retrieve a token
-          export VAULT_TOKEN=$(vault write -field=token auth/approle/login role_id=${VAULT_ROLE_ID} secret_id=${VAULT_SECRET_ID} | tail -n 1)
-          
-          # Construct Vault path based on cluster_scope
-          VAULT_PATH="hosted-apps-${{ github.event.inputs.cluster_scope }}/cluster"
-
-          # Fetch the kubeconfig from Vault
-          vault read -namespace=${VAULT_NAMESPACE} -field=kubeconfig ${VAULT_URL}/${VAULT_PATH} > kubeconfig-${{ matrix.cluster }}
-
-
-      - name: Install Datadog Agent
-        env:
-          DD_API_KEY: ${{ secrets.DD_API_KEY }}
-        run: |    
-          # Replace values.yml    
-          sed -i "s|REPLACE_DD_API_KEY|${DD_API_KEY}|g" /path/to/values-${{ matrix.cluster }}.yaml
-
-          # Use Helm to install Datadog agent            
-          helm repo add datadog https://helm.datadoghq.com
-          helm repo update
-          helm install datadog-agent datadog/datadog \
-            --set-file values.yaml=/path/to/values-${{ matrix.cluster }}.yaml \
-            --kubeconfig kubeconfig-${{ matrix.cluster }}
+          if [ "${{ matrix.workflowType }}" = "HA-Iternal" ]; then
+            # Trigger the HA-Iternal workflow
+            curl -X POST \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/actions/workflows/DS.yml/dispatches \
+              -d '{"ref":"main"}'
+          elif [ "${{ matrix.workflowType }}" = "HA-External" ]; then
+            # Add steps to trigger HA-External workflow
+            curl -X POST \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/actions/workflows/DS.yml/dispatches \
+              -d '{"ref":"main"}'
+          elif [ "${{ matrix.workflowType }}" = "DataServices" ]; then
+            # Add steps to trigger HDataServices workflow
+            curl -X POST \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/actions/workflows/DS.yml/dispatches \
+              -d '{"ref":"main"}'
+          else
+            echo "Invalid workflowType provided"
+            exit 1
+          fi
