@@ -10,6 +10,7 @@ on:
         options:
           - 'build'
           - 'deploy-to-staging'
+          - 'EU-deploy-to-staging'
           - 'deploy-to-production'
 
 jobs:
@@ -27,6 +28,20 @@ jobs:
           # For example, compile code, install dependencies, etc.
 
   deploy-to-staging:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+
+    steps:
+      - name: Deploy to staging
+        run: |
+          echo "Deploying to staging environment..."
+          # Add your deployment steps here
+          # For example, copy files to the server, restart services, etc.
+          echo "Deployment to staging complete!"
+
+  EU-deploy-to-staging:
     needs: build
     runs-on: ubuntu-latest
     environment:
