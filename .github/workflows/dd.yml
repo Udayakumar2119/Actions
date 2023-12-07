@@ -1,16 +1,14 @@
-name: Manual Workflow
+name: Manual Workflow with Inputs
 
 on:
   workflow_dispatch:
     inputs:
       run-job1:
         description: 'Run Job 1'
-        required: false
-        default: 'true'
+        required: true
       run-job2:
         description: 'Run Job 2'
-        required: false
-        default: 'true'
+        required: true
 
 jobs:
   job1:
@@ -32,5 +30,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Confirm Job 2
+      id: confirm
+      run: |
+        echo "Do you want to proceed with Job 2? (yes/no)"
+        read confirmation
+        echo "::set-output name=confirmation::$confirmation"
+
     - name: Print Text from Job 2
-      run: echo "Hello from Job 2"
+      run: |
+        if [ "${{ steps.confirm.outputs.confirmation }}" == "yes" ]; then
+          echo "Proceeding with Job 2"
+        else
+          echo "Job 2 canceled"
+          exit 1
+        fi
