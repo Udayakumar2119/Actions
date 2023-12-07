@@ -1,38 +1,36 @@
-name: My CI/CD Workflow
+name: Manual Workflow
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      run-job1:
+        description: 'Run Job 1'
+        required: false
+        default: 'true'
+      run-job2:
+        description: 'Run Job 2'
+        required: false
+        default: 'true'
 
 jobs:
-  build:
+  job1:
     runs-on: ubuntu-latest
+    if: github.event.inputs.run-job1 == 'true'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Build
-        run: |
-          # Your build commands here
-          echo "Building the project"
+    - name: Print Text from Job 1
+      run: echo "Hello from Job 1"
 
-  test:
+  job2:
     runs-on: ubuntu-latest
-
-    needs: build
+    if: github.event.inputs.run-job2 == 'true'
 
     steps:
-      - name: Ask for approval
-        id: approval
-        run: |
-          echo "Do you approve this deployment? (yes/no)"
-          echo "::set-output name=approved::${{ runner.os == 'Windows' && (INPUT_APPROVE == 'yes' || INPUT_APPROVE == 'no') }}"
-        shell: bash
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Run tests if approved
-        if: steps.approval.outputs.approved == 'yes'
-        run: |
-          # Your test commands here
-          echo "Running tests"
+    - name: Print Text from Job 2
+      run: echo "Hello from Job 2"
