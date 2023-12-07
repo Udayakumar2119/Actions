@@ -1,47 +1,55 @@
-name: Manual Workflow with Inputs
+name: Deploy
 
 on:
   workflow_dispatch:
     inputs:
-      run-job1:
-        description: 'Run Job 1'
+      job-to-run:
+        description: 'Select job to run'
         required: true
-      run-job2:
-        description: 'Run Job 2'
-        required: true
+        default: 'build'
+        options:
+          - 'build'
+          - 'deploy-to-staging'
+          - 'deploy-to-production'
 
 jobs:
-  job1:
+  build:
     runs-on: ubuntu-latest
-    if: github.event.inputs.run-job1 == 'true'
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Print Text from Job 1
-      run: echo "Hello from Job 1"
+      - name: Build
+        run: |
+          echo "Building the application..."
+          # Add your build steps here
+          # For example, compile code, install dependencies, etc.
 
-  job2:
+  deploy-to-staging:
+    needs: build
     runs-on: ubuntu-latest
-    if: github.event.inputs.run-job2 == 'true'
+    environment:
+      name: staging
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Deploy to staging
+        run: |
+          echo "Deploying to staging environment..."
+          # Add your deployment steps here
+          # For example, copy files to the server, restart services, etc.
+          echo "Deployment to staging complete!"
 
-    - name: Confirm Job 2
-      id: confirm
-      run: |
-        echo "Do you want to proceed with Job 2? (yes/no)"
-        read confirmation
-        echo "::set-output name=confirmation::$confirmation"
+  deploy-to-production:
+    needs: deploy-to-staging
+    runs-on: ubuntu-latest
+    environment:
+      name: production
 
-    - name: Print Text from Job 2
-      run: |
-        if [ "${{ steps.confirm.outputs.confirmation }}" == "yes" ]; then
-          echo "Proceeding with Job 2"
-        else
-          echo "Job 2 canceled"
-          exit 1
-        fi
+    steps:
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production environment..."
+          # Add your production deployment steps here
+          # This could include additional checks or validations
+          echo "Deployment to production complete!"
