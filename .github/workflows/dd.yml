@@ -11,7 +11,8 @@ on:
           - 'build'
           - 'US-deploy-to-staging'
           - 'EU-deploy-to-staging'
-          - 'deploy-to-production'
+          - 'US-deploy-to-production'
+          - 'EU-deploy-to-production'          
 
 jobs:
   build:
@@ -69,8 +70,8 @@ jobs:
           # This could include additional checks or validations
           echo "Deployment to production complete!"
 
-  US-deploy-to-production:
-    needs: US-deploy-to-staging
+  EU-deploy-to-production:
+    needs: EU-deploy-to-staging
     runs-on: ubuntu-latest
     environment:
       name: production
