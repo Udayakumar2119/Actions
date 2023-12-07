@@ -9,7 +9,7 @@ on:
         default: 'build'
         options:
           - 'build'
-          - 'deploy-to-staging'
+          - 'US-deploy-to-staging'
           - 'EU-deploy-to-staging'
           - 'deploy-to-production'
 
@@ -27,7 +27,7 @@ jobs:
           # Add your build steps here
           # For example, compile code, install dependencies, etc.
 
-  deploy-to-staging:
+  US-deploy-to-staging:
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -55,8 +55,22 @@ jobs:
           # For example, copy files to the server, restart services, etc.
           echo "Deployment to staging complete!"
 
-  deploy-to-production:
-    needs: deploy-to-staging
+  US-deploy-to-production:
+    needs: US-deploy-to-staging
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+
+    steps:
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production environment..."
+          # Add your production deployment steps here
+          # This could include additional checks or validations
+          echo "Deployment to production complete!"
+
+  US-deploy-to-production:
+    needs: US-deploy-to-staging
     runs-on: ubuntu-latest
     environment:
       name: production
