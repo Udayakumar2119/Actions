@@ -1,9 +1,10 @@
 name: My CI/CD Workflow
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Build and Test"]
+    types:
+      - completed
 
 jobs:
   build:
@@ -24,10 +25,15 @@ jobs:
     needs: build
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Ask for approval
+        id: approval
+        run: |
+          echo "Do you approve this deployment? (yes/no)"
+          echo "::set-output name=approved::${{ runner.os == 'Windows' && (INPUT_APPROVE == 'yes' || INPUT_APPROVE == 'no') }}"
+        shell: bash
 
-      - name: Run tests
+      - name: Run tests if approved
+        if: steps.approval.outputs.approved == 'yes'
         run: |
           # Your test commands here
           echo "Running tests"
