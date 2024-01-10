@@ -1,0 +1,39 @@
+name: Deploy Datadog
+run-name: ${{ github.actor }} is deploying Datadog  ${{ github.ref_name }} branch
+on: 
+  workflow_dispatch:
+    inputs:
+      NGC:
+        description: 'Deploy DD agent on NGC'
+        required: false
+        type: boolean
+      Legacy:
+        description: 'Deploy DD agent on Legacy'
+        required: false
+        type: boolean
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: NGC
+        if: github.event.inputs.NGC.outputs.value == 'true'
+        run: |
+          if ${{github.ref_name == 'main'}}
+          then
+            echo NGC main branch
+          else
+            echo NGC other branch
+          fi
+      - name: Legacy
+        if: github.event.inputs.Legacy.outputs.value == 'true'
+        run: |
+          if ${{github.ref_name == 'main'}}
+          then
+            echo Legacy main branch
+          else
+            echo Legacy other branch
+          fi          
