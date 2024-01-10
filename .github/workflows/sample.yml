@@ -1,39 +1,49 @@
-name: Deploy Datadog
-run-name: ${{ github.actor }} is deploying Datadog  ${{ github.ref_name }} branch
-on: 
+name: Install Datadog Agent
+
+on:
   workflow_dispatch:
     inputs:
-      NGC:
-        description: 'Deploy DD agent on NGC'
-        required: false
-        type: boolean
-      Legacy:
-        description: 'Deploy DD agent on Legacy'
-        required: false
-        type: boolean
+      environment:
+        description: 'Environment to deploy (dev or qa)'
+        required: true
+        default: 'dev'
+
 jobs:
-  build:
+  install-datadog:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        
-      - name: NGC
-        if: github.event.inputs.NGC.outputs.value == 'true'
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Azure CLI
+        uses: azure/setup-az-cli@v1
+        with:
+          azcliversion: 'latest'
+
+      - name: Fetch AKS cluster config from Vault
         run: |
-          if ${{github.ref_name == 'main'}}
-          then
-            echo NGC main branch
-          else
-            echo NGC other branch
-          fi
-      - name: Legacy
-        if: github.event.inputs.Legacy.outputs.value == 'true'
+          VAULT_ADDR="https://your-vault-url"
+
+          # Use different role IDs and secret IDs based on the specified environment
+          ROLE_ID=$(vault read -field=role_id auth/approle/role/your-role-id-${{ github.event.inputs.environment }}/role-id)
+          SECRET_ID=$(vault write -field=secret_id -f auth/approle/role/your-role-id-${{ github.event.inputs.environment }}/secret-id)
+
+          export KUBECONFIG=$(vault read -field=kubeconfig secret/path/to/aks-cluster/${{ github.event.inputs.environment }} role_id=${ROLE_ID} secret_id=${SECRET_ID})
+          echo "$KUBECONFIG" > kubeconfig.yaml
+
+      - name: Configure kubectl
         run: |
-          if ${{github.ref_name == 'main'}}
-          then
-            echo Legacy main branch
-          else
-            echo Legacy other branch
-          fi          
+          mkdir -p ~/.kube
+          mv kubeconfig.yaml ~/.kube/config
+
+      - name: Install Datadog Helm chart
+        run: |
+          helm repo add datadog https://helm.datadoghq.com
+          helm repo update
+
+          # Use different values for apiKey and other parameters based on the specified environment
+          helm upgrade --install datadog-agent datadog/datadog \
+            --namespace datadog \
+            --set datadog.apiKey=${{ secrets.DATADOG_API_KEY_${{ github.event.inputs.environment | upper }} }}
+
