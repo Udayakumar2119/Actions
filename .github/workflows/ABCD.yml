@@ -1,5 +1,5 @@
-name: Manual Trigger Workflow
-
+name: Manual Trigger Workflow 
+run-name: ${{ github.actor }}
 on:
   workflow_dispatch:
     inputs:
@@ -36,7 +36,7 @@ jobs:
 
   promoteQA:
     runs-on: ubuntu-latest
-    needs: deployDEV
+    needs: ${{ deployDEV || github.actor == 'Udayakumar2119' }}
     if: ${{ success() && github.event.inputs.promoteQA == 'true' }}
     steps:
       - name: Promote to QA
