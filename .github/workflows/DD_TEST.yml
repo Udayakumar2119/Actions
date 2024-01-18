@@ -72,7 +72,7 @@ jobs:
   QA:
     runs-on: ubuntu-latest  
     needs: DEV
-    if: "${{ inputs.Environment == 'QA' }}"
+    if: ${{ github.event_name == 'manual' && inputs.Environment == 'QA' }}
     steps:
       - name: Deploy to QA
         run: |
@@ -96,7 +96,7 @@ jobs:
           echo "${{ inputs.Environment }}"  
   NGC_QA:
     runs-on: ubuntu-latest  
-    needs: DEV
+    needs: NGC_DEV
     if: "${{ inputs.Environment == 'QA' }}"
     steps:
       - name: Deploy to QA
