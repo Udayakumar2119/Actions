@@ -77,6 +77,15 @@ jobs:
       - name: Deploy to QA
         run: |
           echo "${{ inputs.Environment }}"
+          
+  PromoteDPUSQA:
+    runs-on: ubuntu-latest
+    needs: DEV
+    if: "${{ needs.DP.outputs['Cluster_Type'] == 'DP' && needs.DP.outputs['Region'] == 'US' && needs.DP.outputs['Environment'] == 'DEV' }}"
+    steps:
+      - name: Promote DP US DEV to QA
+        run: |
+          echo "Promoting DP US DEV to QA"          
   NGC_DEV:
     runs-on: ubuntu-latest  
     needs: NGC
