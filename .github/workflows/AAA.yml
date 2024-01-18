@@ -22,7 +22,7 @@ on:
       Environment:
         description: 'Environment'
         required: true
-        default: 'Dev'
+        default: 'DEV'
         options:
           - 'DEV'
           - 'QA'
@@ -30,13 +30,37 @@ on:
           - 'PRD'      
 
 jobs:
-  build:
+  ClusterType:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Cluster Type DP | NGC
         run: |
-          echo ""${{ inputs.Cluster_Type }}""
+          echo "${{ inputs.Cluster_Type }}"
+
+  Lower:
+    runs-on: ubuntu-latest
+    needs: ClusterType
+    steps:
+      - name: Deploy to Dev
+        if: "${{ inputs.Environment == 'Dev' }}"
+        run: |
+          echo "${{ inputs.Environment }}"
+      - name: Deploy to Dev
+        if: "${{ inputs.Environment == 'QA' }}"
+        run: |
+          echo "${{ inputs.Environment }}"          
+          
+  Upper:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Dev
+        if: "${{ inputs.Environment == 'STG' }}"
+        run: |
+          echo "${{ inputs.Environment }}"
+      - name: Deploy to Dev
+        if: "${{ inputs.Environment == 'PRD' }}"
+        run: |
+          echo "${{ inputs.Environment }}"         
