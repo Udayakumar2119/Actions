@@ -43,6 +43,7 @@ jobs:
   Lower:
     runs-on: ubuntu-latest
     needs: ClusterType
+    if: "${{ inputs.Cluster_Type == 'DP' }}"
     steps:
       - name: Deploy to Dev
         if: "${{ inputs.Environment == 'Dev' }}"
@@ -55,6 +56,7 @@ jobs:
           
   Upper:
     runs-on: ubuntu-latest
+    if: "${{ inputs.Cluster_Type == 'NGC' }}"
     steps:
       - name: Deploy to Dev
         if: "${{ inputs.Environment == 'STG' }}"
