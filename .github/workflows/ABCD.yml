@@ -36,8 +36,7 @@ jobs:
 
   promoteQA:
     runs-on: ubuntu-latest
-    needs: deployDEV
-    if: ${{ success() && github.event.inputs.promoteQA == 'true' }}
+    needs: deployDEV || ${{ github.actor == 'Udayakumar2119' }}
     steps:
       - name: Promote to QA
         run: echo "Promoting to QA"
