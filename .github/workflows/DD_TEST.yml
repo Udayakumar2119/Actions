@@ -46,22 +46,20 @@ jobs:
       name: DP    
     needs: ClusterType
     if: "${{ inputs.Cluster_Type == 'DP' }}"
+      run: |
+        echo "${{ inputs.Cluster_Type }}"
 
     steps:
       - name: Deploy to Dev
         if: "${{ inputs.Environment == 'Dev' }}"
         run: |
           echo "${{ inputs.Environment }}"
-      - name: Deploy to QA
-        if: "${{ inputs.Environment == 'QA' }}"
+      - name: Deploy to QA/UAT
+        if: "${{ inputs.Environment == 'QA' || inputs.Environment == 'UAT'}}"
         run: |
           echo "${{ inputs.Environment }}"
-      - name: Deploy to STG
-        if: "${{ inputs.Environment == 'STG' }}"
-        run: |
-          echo "${{ inputs.Environment }}"
-      - name: Deploy to PRD
-        if: "${{ inputs.Environment == 'PRD' }}"
+      - name: Deploy to STG/PRD
+        if: "${{ inputs.Environment == 'STG' || inputs.Environment == 'PRD'}}"
         run: |
           echo "${{ inputs.Environment }}"                      
           
@@ -88,4 +86,4 @@ jobs:
       - name: Deploy to PRD
         if: "${{ inputs.Environment == 'PRD' }}"
         run: |
-          echo "${{ inputs.Environment }}"         
+          echo "${{ inputs.Environment }}"
