@@ -28,7 +28,6 @@ on:
 jobs:
   deployDEV:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.deployDEV == 'true' }}
     steps:
       - name: Deploy to DEV
         run: echo "Deploying to DEV"
