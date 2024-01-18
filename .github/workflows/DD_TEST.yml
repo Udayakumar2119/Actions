@@ -1,0 +1,91 @@
+name: DD agent sample
+
+on:
+  workflow_dispatch:
+    inputs:
+      Cluster_Type:
+        description: 'Cluster Type'
+        required: true
+        default: 'DP'
+        options:
+          - 'DP'
+          - 'NGC'
+      Region:
+        description: 'Select Region'
+        required: true
+        default: 'US'
+        options:
+          - 'US'
+          - 'WE'
+          - 'AU'
+          - 'SG'
+      Environment:
+        description: 'Environment'
+        required: true
+        default: 'DEV'
+        options:
+          - 'DEV'
+          - 'QA'
+          - 'STG'
+          - 'PRD'      
+
+jobs:
+  ClusterType:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cluster Type DP | NGC
+        run: |
+          echo "${{ inputs.Cluster_Type }}"
+
+  DP:
+    runs-on: ubuntu-latest
+    environment:
+      name: DP    
+    needs: ClusterType
+    if: "${{ inputs.Cluster_Type == 'DP' }}"
+
+    steps:
+      - name: Deploy to Dev
+        if: "${{ inputs.Environment == 'Dev' }}"
+        run: |
+          echo "${{ inputs.Environment }}"
+      - name: Deploy to QA
+        if: "${{ inputs.Environment == 'QA' }}"
+        run: |
+          echo "${{ inputs.Environment }}"
+      - name: Deploy to STG
+        if: "${{ inputs.Environment == 'STG' }}"
+        run: |
+          echo "${{ inputs.Environment }}"
+      - name: Deploy to PRD
+        if: "${{ inputs.Environment == 'PRD' }}"
+        run: |
+          echo "${{ inputs.Environment }}"                      
+          
+  Upper:
+    runs-on: ubuntu-latest
+    environment:
+      name: Upper
+    needs: ClusterType
+    if: "${{ inputs.Cluster_Type == 'NGC' }}"
+
+    steps:
+      - name: Deploy to Dev
+        if: "${{ inputs.Environment == 'Dev' }}"
+        run: |
+          echo "${{ inputs.Environment }}"
+      - name: Deploy to QA
+        if: "${{ inputs.Environment == 'QA' }}"
+        run: |
+          echo "${{ inputs.Environment }}"    
+      - name: Deploy to STG
+        if: "${{ inputs.Environment == 'STG' }}"
+        run: |
+          echo "${{ inputs.Environment }}"
+      - name: Deploy to PRD
+        if: "${{ inputs.Environment == 'PRD' }}"
+        run: |
+          echo "${{ inputs.Environment }}"         
