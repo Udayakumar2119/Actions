@@ -26,8 +26,9 @@ on:
         options:
           - 'DEV'
           - 'QA'
+          - 'UAT'
           - 'STG'
-          - 'PRD'      
+          - 'PRD'
 
 jobs:
   ClusterType:
@@ -61,7 +62,7 @@ jobs:
       - name: Deploy to STG/PRD
         if: "${{ inputs.Environment == 'STG' || inputs.Environment == 'PRD'}}"
         run: |
-          echo "${{ inputs.Environment }}"                      
+          echo "${{ inputs.Environment }}"
           
   Upper:
     runs-on: ubuntu-latest
