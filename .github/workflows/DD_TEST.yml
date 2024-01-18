@@ -60,4 +60,36 @@ jobs:
     steps:
       - name: DP Cluster  
         run: |
-          echo "${{ inputs.Cluster_Type }}"          
+          echo "${{ inputs.Cluster_Type }}"
+  DEV:
+    runs-on: ubuntu-latest  
+    needs: DP
+    if: "${{ inputs.Environment == 'DEV' }}"
+    steps:
+      - name: Deploy to Dev
+        run: |
+          echo "${{ inputs.Environment }}"  
+  QA:
+    runs-on: ubuntu-latest  
+    needs: DP
+    if: "${{ inputs.Environment == 'QA' }}"
+    steps:
+      - name: Deploy to QA
+        run: |
+          echo "${{ inputs.Environment }}"
+  DEV:
+    runs-on: ubuntu-latest  
+    needs: NGC
+    if: "${{ inputs.Environment == 'DEV' }}"
+    steps:
+      - name: Deploy to Dev
+        run: |
+          echo "${{ inputs.Environment }}"  
+  QA:
+    runs-on: ubuntu-latest  
+    needs: NGC
+    if: "${{ inputs.Environment == 'QA' }}"
+    steps:
+      - name: Deploy to QA
+        run: |
+          echo "${{ inputs.Environment }}"           
