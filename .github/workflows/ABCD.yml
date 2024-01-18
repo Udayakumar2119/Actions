@@ -32,7 +32,7 @@ jobs:
     if: ${{ github.event.inputs.deployDEV == 'true' }}
     steps:
       - name: Deploy to DEV
-        run: echo "Deploying to DEV"
+        run: echo "${{ github.actor }}"
 
   promoteQA:
     runs-on: ubuntu-latest
