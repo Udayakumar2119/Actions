@@ -51,3 +51,13 @@ jobs:
       - name: DP Cluster  
         run: |
           echo "${{ inputs.Cluster_Type }}"
+  NGC:
+    runs-on: ubuntu-latest
+    environment:
+      name: NGC    
+    needs: ClusterType
+    if: "${{ inputs.Cluster_Type == 'NGC' }}"
+    steps:
+      - name: DP Cluster  
+        run: |
+          echo "${{ inputs.Cluster_Type }}"          
