@@ -77,7 +77,7 @@ jobs:
       - name: Deploy to QA
         run: |
           echo "${{ inputs.Environment }}"
-  DEV:
+  NGC_DEV:
     runs-on: ubuntu-latest  
     needs: NGC
     if: "${{ inputs.Environment == 'DEV' }}"
@@ -85,7 +85,7 @@ jobs:
       - name: Deploy to Dev
         run: |
           echo "${{ inputs.Environment }}"  
-  QA:
+  NGC_QA:
     runs-on: ubuntu-latest  
     needs: NGC
     if: "${{ inputs.Environment == 'QA' }}"
