@@ -51,6 +51,7 @@ jobs:
       - name: DP Cluster  
         run: |
           echo "${{ inputs.Cluster_Type }}"
+          echo "${{ github.event_name }}"
   NGC:
     runs-on: ubuntu-latest
     environment:
