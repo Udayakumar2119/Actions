@@ -73,7 +73,7 @@ jobs:
 
   PromoteDPUSQA:
     runs-on: ubuntu-latest
-    needs: DP
+    needs: [DP, DEV]
     if: "${{ inputs.Environment == 'QA' }} && (needs.DP.result == 'success' || needs.DEV.result == 'success') }}"
     steps:
       - name: Promote DP US DEV to QA
