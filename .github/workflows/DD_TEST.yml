@@ -73,7 +73,7 @@ jobs:
 
   PromoteDPUSQA:
     runs-on: ubuntu-latest
-    needs: DEV
+    needs: [DEV, DP]
     if: "${{ needs.DP.outputs['Cluster_Type'] == 'DP' && needs.DP.outputs['Region'] == 'US' && needs.DP.outputs['Environment'] == 'DEV' }}"
     steps:
       - name: Promote DP US DEV to QA
@@ -82,7 +82,7 @@ jobs:
           
   QA:
     runs-on: ubuntu-latest
-    needs: PromoteDPUSQA
+    needs: [PromoteDPUSQA, DP]
     if: ${{ github.event_name == 'manual' }}
     steps:
       - name: Deploy to QA
