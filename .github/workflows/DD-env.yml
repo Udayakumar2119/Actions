@@ -1,0 +1,61 @@
+name: Manual Trigger Workflow 
+run-name: ${{ github.actor }}
+on:
+  workflow_dispatch:
+    inputs:
+      deployDEV:
+        description: 'Deploy to DEV'
+        required: false
+        default: true
+      promoteQA:
+        description: 'Promote to QA'
+        required: false
+        default: true
+      deployQA:
+        description: 'Deploy to QA'
+        required: false
+        default: true
+      signoffQA:
+        description: 'Sign off QA'
+        required: false
+        default: true
+      promoteSTG:
+        description: 'Promote to STG'
+        required: false
+        default: true
+      deploySTG:
+        description: 'Deploy to STG'
+        required: false
+        default: true
+      signoffSTG:
+        description: 'Sign off STG'
+        required: false
+
+jobs:
+  deployDEV:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.deployDEV == 'true' }}
+    steps:
+      - name: Deploy to DEV
+        run: echo "${{ github.actor }}"
+
+  promoteQA:
+    runs-on: ubuntu-latest
+    needs: deployDEV || ${{ github.event.inputs.promoteQA == 'true' }}
+    steps:
+      - name: Promote to QA
+        run: echo "Promoting to QA"
+
+  deployQA:
+    runs-on: ubuntu-latest
+    needs: promoteQA || ${{ github.event.inputs.deployQA == 'true' }}
+    steps:
+      - name: Deploy to QA
+        run: echo "Deploying to QA"
+
+  signoffQA:
+    runs-on: ubuntu-latest
+    needs: deployQA || ${{ github.event.inputs.signoffQA == 'true' }}
+    steps:
+      - name: Sign off QA
+        run: echo "Signing off QA"
