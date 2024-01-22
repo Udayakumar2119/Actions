@@ -69,16 +69,8 @@ jobs:
     steps:
       - name: Deploy to Dev
         run: |
-          echo "${{ inputs.Environment }}"  
-  QA:
-    runs-on: ubuntu-latest
-    needs: DP
-    if: ${{ github.event_name == 'manual' }}
-    steps:
-      - name: Deploy to QA
-        run: |
           echo "${{ inputs.Environment }}"
-          
+
   PromoteDPUSQA:
     runs-on: ubuntu-latest
     needs: DEV
@@ -86,7 +78,17 @@ jobs:
     steps:
       - name: Promote DP US DEV to QA
         run: |
-          echo "Promoting DP US DEV to QA"          
+          echo "Promoting DP US DEV to QA" 
+          
+  QA:
+    runs-on: ubuntu-latest
+    needs: PromoteDPUSQA
+    if: ${{ github.event_name == 'manual' }}
+    steps:
+      - name: Deploy to QA
+        run: |
+          echo "${{ inputs.Environment }}"
+                   
   NGC_DEV:
     runs-on: ubuntu-latest  
     needs: NGC
