@@ -24,6 +24,6 @@ jobs:
   job_using_template:
     needs: main_job
     runs-on: ubuntu-latest
-    extends: ./.github/workflows/my-template.yml
+    extends: .github/workflows/my-template.yml
     with:
       environment: ${{ github.event.inputs.environment }}
