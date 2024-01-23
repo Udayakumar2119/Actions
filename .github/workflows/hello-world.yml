@@ -11,8 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: before checkout
+        run: pwd
+        
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Hello World
-        run: echo "Hello, World!"
+      - name: after checkout
+        run: pwd
