@@ -28,5 +28,5 @@ jobs:
     with:
       environment: ${{ github.event.inputs.environment }}
     steps:
-      - name: Print a message
-        run: echo "Hello from the template! Environment: ${{ github.event.inputs.environment }}"
+      - name: Checkout repository
+        run: echo "hi"     
