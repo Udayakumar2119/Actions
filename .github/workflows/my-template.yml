@@ -1,0 +1,17 @@
+name: My Template
+
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment for the template'
+        required: true
+
+
+jobs:
+  template_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print a message
+        run: echo "Hello from the template! Environment: ${{ inputs.environment }}"
