@@ -1,0 +1,29 @@
+name: Main Workflow - Dev
+
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment for the main workflow'
+        required: true
+        default: 'dev'
+        options:
+          - 'dev'
+          - 'qa'
+          - 'stg'
+
+jobs:
+  main_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+
+  job_using_template:
+    needs: main_job
+    runs-on: ubuntu-latest
+    extends: ./.github/workflows/my-template.yml
+    with:
+      environment: ${{ github.event.inputs.environment }}
