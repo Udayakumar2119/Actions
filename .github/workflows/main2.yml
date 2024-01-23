@@ -27,3 +27,6 @@ jobs:
     extends: .github/workflows/my-template.yml
     with:
       environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Print a message
+        run: echo "Hello from the template! Environment: ${{ inputs.environment }}"      
