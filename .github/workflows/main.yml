@@ -3,6 +3,11 @@ run-name: ${{ github.actor }} is Datadog Agent on DS AKS Clusters from ${{ githu
 on:
   workflow_dispatch:
     inputs:
+        deploy-all:
+          description: 'DEPLOY ALL CLUSTERS'
+          type: boolean
+          required: false
+          default: false    
         us-dev-deploy:
           description: 'US DEV DEPLOY'
           type: boolean
@@ -47,14 +52,14 @@ on:
 jobs:
   US_DEV_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.us-dev-deploy == 'true' }}
+    if: ${{ github.event.inputs.us-dev-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
   US_QA_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.us-qa-deploy == 'true' }}
+    if: ${{ github.event.inputs.us-qa-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -64,7 +69,7 @@ jobs:
 
   US_STG_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.us-stg-deploy == 'true' }}    
+    if: ${{ github.event.inputs.us-stg-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -74,7 +79,7 @@ jobs:
 
   WE_STG_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.we-stg-deploy == 'true' }}
+    if: ${{ github.event.inputs.we-stg-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -84,7 +89,7 @@ jobs:
 
   US_PRD_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.us-prd-deploy == 'true' }}    
+    if: ${{ github.event.inputs.us-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -94,7 +99,7 @@ jobs:
 
   WE_PRD_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.we-prd-deploy == 'true' }}    
+    if: ${{ github.event.inputs.we-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -104,7 +109,7 @@ jobs:
 
   AU_PRD_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.au-prd-deploy == 'true' }}    
+    if: ${{ github.event.inputs.au-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -114,7 +119,7 @@ jobs:
 
   SG_PRD_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.sg-prd-deploy == 'true' }}    
+    if: ${{ github.event.inputs.sg-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
