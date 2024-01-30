@@ -38,7 +38,7 @@ on:
           type: boolean
           required: true
           default: false
-        SG-PRD-deploy:
+        sg-prd-deploy:
           description: 'SG PRD DEPLOY'
           type: boolean
           required: true
@@ -54,7 +54,7 @@ jobs:
 
   US_QA_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.US DEV DEPLOY == 'true' }}
+    if: ${{ github.event.inputs.us-dev-deploy == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
