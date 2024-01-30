@@ -39,7 +39,7 @@ on:
 jobs:
   US_DEV_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.us-dev-deploy == 'false' }}
+    if: ${{ github.event.inputs.us-dev-deploy == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
