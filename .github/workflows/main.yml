@@ -42,7 +42,7 @@ on:
           description: 'US LOWER'
           type: boolean
           required: false
-          default: false
+          default: true
         non-prd:
           description: 'NON-PRD'
           type: boolean
