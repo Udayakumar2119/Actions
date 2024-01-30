@@ -7,34 +7,42 @@ on:
           description: 'US DEV DEPLOY'
           type: boolean
           required: false
+          default: false
         us-qa-deploy:
           description: 'US QA DEPLOY'
           type: boolean
-          required: false        
+          required: false
+          default: false        
         us-stg-deploy:
           description: 'US STG DEPLOY'
           type: boolean
           required: false
+          default: false
         we-stg-deploy:
           description: 'WE STG DEPLOY'
           type: boolean
           required: false
+          default: false
         us-prd-deploy:
           description: 'US PRD DEPLOY'
           type: boolean
           required: false
+          default: false
         we-prd-deploy:
           description: 'WE PRD DEPLOY'
           type: boolean
           required: false
+          default: false
         au-prd-deploy:
           description: 'AU PRD DEPLOY'
           type: boolean
           required: false
+          default: false
         sg-prd-deploy:
           description: 'SG PRD DEPLOY'
           type: boolean
           required: false
+          default: false
           
 jobs:
   US_DEV_DEPLOY:
@@ -46,6 +54,7 @@ jobs:
 
   US_QA_DEPLOY:
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.us-qa-deploy == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
