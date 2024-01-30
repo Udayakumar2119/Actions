@@ -38,16 +38,6 @@ on:
           type: boolean
           required: false
           default: false
-        au-prd-deploy:
-          description: 'AU PRD DEPLOY'
-          type: boolean
-          required: false
-          default: false
-        sg-prd-deploy:
-          description: 'SG PRD DEPLOY'
-          type: boolean
-          required: false
-          default: false
         us-lower:
           description: 'US LOWER'
           type: boolean
@@ -145,28 +135,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.we-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
     needs: PRD       
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        ##Clear all kubeconfigs
-        ##fetch QA Kubeconfig
-        ##validate QA kubeconfig
-
-  AU_PRD_DEPLOY:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.au-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
-    needs: PRD
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        ##Clear all kubeconfigs
-        ##fetch QA Kubeconfig
-        ##validate QA kubeconfig
-
-  SG_PRD_DEPLOY:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.sg-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
-    needs: PRD
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
