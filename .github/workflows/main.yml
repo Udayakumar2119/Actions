@@ -81,7 +81,7 @@ jobs:
 
   US_DEV_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.us-dev-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    if: ${{ github.event.inputs.us-dev-deploy == 'true' || github.event.inputs.deploy-all == 'true' || github.event.inputs.us-lower == 'true' }}
     needs: US_LOWER
     steps:
       - name: Checkout code
@@ -89,7 +89,7 @@ jobs:
 
   US_QA_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.us-qa-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    if: ${{ github.event.inputs.us-qa-deploy == 'true' || github.event.inputs.deploy-all == 'true' || github.event.inputs.us-lower == 'true' }}
     needs: US_LOWER
     steps:
       - name: Checkout code
