@@ -50,6 +50,13 @@ on:
           default: false
           
 jobs:
+  DEPLOY_ALL:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.deploy-all == 'true' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
   US_DEV_DEPLOY:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.us-dev-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
@@ -60,6 +67,7 @@ jobs:
   US_QA_DEPLOY:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.us-qa-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: [ DEPLOY_ALL, US_DEV_DEPLOY ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -69,7 +77,8 @@ jobs:
 
   US_STG_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.us-stg-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}    
+    if: ${{ github.event.inputs.us-stg-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: [ DEPLOY_ALL, US_QA_DEPLOY ]        
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -80,6 +89,7 @@ jobs:
   WE_STG_DEPLOY:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.we-stg-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: [ DEPLOY_ALL, US_QA_DEPLOY ] 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -89,7 +99,8 @@ jobs:
 
   US_PRD_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.us-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}    
+    if: ${{ github.event.inputs.us-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: [ DEPLOY_ALL, US_STG_DEPLOY ]        
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -99,7 +110,8 @@ jobs:
 
   WE_PRD_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.we-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}    
+    if: ${{ github.event.inputs.we-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: [ DEPLOY_ALL, WE_STG_DEPLOY ]        
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -109,7 +121,8 @@ jobs:
 
   AU_PRD_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.au-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}    
+    if: ${{ github.event.inputs.au-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: [ DEPLOY_ALL, WE_PRD_DEPLOY ]        
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -119,7 +132,8 @@ jobs:
 
   SG_PRD_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.sg-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}    
+    if: ${{ github.event.inputs.sg-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: [ DEPLOY_ALL, AU_PRD_DEPLOY ]       
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
