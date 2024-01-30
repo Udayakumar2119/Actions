@@ -52,7 +52,8 @@ on:
           description: 'US LOWER'
           type: boolean
           required: false
-          default: false        
+          default: false 
+          
 jobs:
   DEPLOY_ALL:
     runs-on: ubuntu-latest
