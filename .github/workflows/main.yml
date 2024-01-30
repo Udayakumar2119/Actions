@@ -7,7 +7,22 @@ on:
           description: 'DEPLOY ALL CLUSTERS'
           type: boolean
           required: false
-          default: false    
+          default: true
+        us-lower:
+          description: 'US LOWER'
+          type: boolean
+          required: false
+          default: true
+        non-prd:
+          description: 'NON-PRD'
+          type: boolean
+          required: false
+          default: true
+        prd:
+          description: 'PRD'
+          type: boolean
+          required: false
+          default: true                
         us-dev-deploy:
           description: 'US DEV DEPLOY'
           type: boolean
@@ -37,22 +52,7 @@ on:
           description: 'WE PRD DEPLOY'
           type: boolean
           required: false
-          default: false
-        us-lower:
-          description: 'US LOWER'
-          type: boolean
-          required: false
-          default: true
-        non-prd:
-          description: 'NON-PRD'
-          type: boolean
-          required: false
-          default: false
-        prd:
-          description: 'PRD'
-          type: boolean
-          required: false
-          default: false                         
+          default: false                       
 jobs:
   DEPLOY_ALL:
     runs-on: ubuntu-latest
