@@ -48,7 +48,11 @@ on:
           type: boolean
           required: false
           default: false
-          
+        us-lower:
+          description: 'US LOWER'
+          type: boolean
+          required: false
+          default: false        
 jobs:
   DEPLOY_ALL:
     runs-on: ubuntu-latest
@@ -56,10 +60,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+  US_LOWER:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.us-lower == 'true' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
   US_DEV_DEPLOY:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.us-dev-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: US_LOWER
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -67,7 +78,7 @@ jobs:
   US_QA_DEPLOY:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.us-qa-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
-    needs: US_DEV_DEPLOY
+    needs: US_LOWER
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
