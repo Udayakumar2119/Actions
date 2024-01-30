@@ -136,7 +136,7 @@ jobs:
 
   WE_PRD_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.we-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' || github.event.inputs.prd == 'true' }}
+    if: ${{ always() && github.event.inputs.we-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' || github.event.inputs.prd == 'true' }}
     needs: PRD       
     steps:
       - name: Checkout code
