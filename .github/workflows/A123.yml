@@ -48,6 +48,11 @@ on:
           type: boolean
           required: false
           default: false
+        deploy-lower:
+          description: 'DEPLOY LOWER'        
+          type: blloean
+          required: false
+          default: false
           
 jobs:
   DEPLOY_ALL:
