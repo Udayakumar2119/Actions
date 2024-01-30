@@ -100,7 +100,7 @@ jobs:
 
   US_STG_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.us-stg-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    if: ${{ github.event.inputs.us-stg-deploy == 'true' || github.event.inputs.deploy-all == 'true' || github.event.inputs.non-prd == 'true' }}
     needs: NON_PRD     
     steps:
       - name: Checkout code
@@ -111,7 +111,7 @@ jobs:
 
   WE_STG_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.we-stg-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    if: ${{ github.event.inputs.we-stg-deploy == 'true' || github.event.inputs.deploy-all == 'true' || github.event.inputs.non-prd == 'true' }}
     needs: NON_PRD
     steps:
       - name: Checkout code
@@ -122,7 +122,7 @@ jobs:
 
   US_PRD_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.us-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    if: ${{ github.event.inputs.us-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' || github.event.inputs.prd == 'true' }}
     needs: PRD 
     steps:
       - name: Checkout code
@@ -133,7 +133,7 @@ jobs:
 
   WE_PRD_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.we-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    if: ${{ github.event.inputs.we-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' || github.event.inputs.prd == 'true' }}
     needs: PRD       
     steps:
       - name: Checkout code
