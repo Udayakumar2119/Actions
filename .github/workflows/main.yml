@@ -44,7 +44,7 @@ on:
           required: true
           default: false          
 jobs:
-  US DEV DEPLOY:
+  US_DEV_DEPLOY:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -52,7 +52,7 @@ jobs:
         ##Clear all kubeconfigs
         ##validate Dev kubeconfig
 
-  US QA DEPLOY:
+  US_QA_DEPLOY:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -61,7 +61,7 @@ jobs:
         ##fetch QA Kubeconfig
         ##validate QA kubeconfig
 
-  US STG DEPLOY:
+  US_STG_DEPLOY:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -70,7 +70,7 @@ jobs:
         ##fetch QA Kubeconfig
         ##validate QA kubeconfig
 
-  WE STG DEPLOY:
+  WE_STG_DEPLOY:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -79,7 +79,7 @@ jobs:
         ##fetch QA Kubeconfig
         ##validate QA kubeconfig
 
-  US PRD DEPLOY:
+  US_PRD_DEPLOY:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -88,7 +88,7 @@ jobs:
         ##fetch QA Kubeconfig
         ##validate QA kubeconfig
 
-  WE PRD DEPLOY:
+  WE_PRD_DEPLOY:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -97,7 +97,7 @@ jobs:
         ##fetch QA Kubeconfig
         ##validate QA kubeconfig
 
-  AU PRD DEPLOY:
+  AU_PRD_DEPLOY:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -106,7 +106,7 @@ jobs:
         ##fetch QA Kubeconfig
         ##validate QA kubeconfig
 
-  SG PRD DEPLOY:
+  SG_PRD_DEPLOY:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
