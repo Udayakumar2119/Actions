@@ -67,7 +67,7 @@ jobs:
   US_QA_DEPLOY:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.us-qa-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
-    needs: [ DEPLOY_ALL, US_DEV_DEPLOY ]
+    needs: US_DEV_DEPLOY
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
