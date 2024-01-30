@@ -39,30 +39,23 @@ on:
           required: false
           default: false                       
 jobs:
-  DEPLOY_ALL:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.deploy-all == 'true' }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
   US_LOWER:
     runs-on: ubuntu-latest
-    needs: DEPLOY_ALL
-    if: ${{ always() && github.event.inputs.deploy-all == 'true' }}
+    if: ${{ always() && github.event.inputs.deploy-all == 'true' || github.event.inputs.us-dev-deploy == 'true' || github.event.inputs.us-qa-deploy == 'true'}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
   NON_PRD:
     runs-on: ubuntu-latest
     needs: US_LOWER
-    if: ${{ always() && github.event.inputs.deploy-all == 'true' }}
+    if: ${{ always() && github.event.inputs.deploy-all == 'true' || github.event.inputs.us-stg-deploy == 'true' || github.event.inputs.we-stg-deploy == 'true'}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
   PRD:
     runs-on: ubuntu-latest
     needs: NON_PRD
-    if: ${{ always() && github.event.inputs.deploy-all == 'true' }}
+    if: ${{ always() && github.event.inputs.deploy-all == 'true' || github.event.inputs.us-prd-deploy == 'true' || github.event.inputs.we-prd-deploy == 'true'}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2                
