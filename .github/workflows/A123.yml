@@ -1,4 +1,4 @@
-name: Deploy Datadog Agent on DS AKS Clusters (Dev & QA)
+name: DD 123
 run-name: ${{ github.actor }} is Datadog Agent on DS AKS Clusters from ${{ github.ref_name }} branch
 on:
   workflow_dispatch:
