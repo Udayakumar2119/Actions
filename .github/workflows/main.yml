@@ -89,7 +89,7 @@ jobs:
   WE_STG_DEPLOY:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.we-stg-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
-    needs: [ DEPLOY_ALL, US_QA_DEPLOY ] 
+    needs: US_QA_DEPLOY
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
