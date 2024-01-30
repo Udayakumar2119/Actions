@@ -6,13 +6,11 @@ on:
         us-dev-deploy:
           description: 'US DEV DEPLOY'
           type: boolean
-          required: true
-          default: false
+          required: false
         us-qa-deploy:
           description: 'US QA DEPLOY'
           type: boolean
-          required: true
-          default: false          
+          required: false
         us-stg-deploy:
           description: 'US STG DEPLOY'
           type: boolean
