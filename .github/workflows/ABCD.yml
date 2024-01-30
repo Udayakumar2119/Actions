@@ -29,7 +29,7 @@ on:
 jobs:
   deployDEV:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.deployDEV == 'true' }}
+    if: ${{ github.event.inputs.deployDEV == 'false' }}
     steps:
       - name: Deploy to DEV
         run: echo "${{ github.actor }}"
