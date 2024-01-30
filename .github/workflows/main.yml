@@ -54,6 +54,7 @@ jobs:
 
   US_QA_DEPLOY:
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.US DEV DEPLOY == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
