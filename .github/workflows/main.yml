@@ -123,7 +123,7 @@ jobs:
   US_PRD_DEPLOY:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.us-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
-    needs: UPRD        
+    needs: PRD 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
