@@ -39,12 +39,10 @@ on:
 jobs:
   US_DEV_DEPLOY:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.us-dev-deploy == 'true' }}
+    if: ${{ github.event.inputs.us-dev-deploy == 'false' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        ##Clear all kubeconfigs
-        ##validate Dev kubeconfig
 
   US_QA_DEPLOY:
     runs-on: ubuntu-latest
