@@ -5,11 +5,13 @@ on:
     inputs:
       deployDEV:
         description: 'Deploy to DEV'
+        type: boolean
         required: false
         default: true
       promoteQA:
         description: 'Promote to QA'
         required: false
+        type: boolean
         default: true
       deployQA:
         description: 'Deploy to QA'
@@ -41,7 +43,8 @@ jobs:
 
   promoteQA:
     runs-on: ubuntu-latest
-    needs: deployDEV || ${{ github.event.inputs.promoteQA == 'true' }}
+    needs:
+      deployDEV OR ${{ github.event.inputs.promoteQA == 'true' }}
     steps:
       - name: Promote to QA
         run: echo "Promoting to QA"
