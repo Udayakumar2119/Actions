@@ -22,17 +22,17 @@ on:
           description: 'PRD'
           type: boolean
           required: false
-          default: true                
+          default: true
         us-dev-deploy:
           description: 'US DEV DEPLOY'
           type: boolean
           required: false
-          default: ${{ github.event.inputs.us-lower }}
+          default: false
         us-qa-deploy:
           description: 'US QA DEPLOY'
           type: boolean
           required: false
-          default: ${{ github.event.inputs.us-lower }}        
+          default: false
         us-stg-deploy:
           description: 'US STG DEPLOY'
           type: boolean
