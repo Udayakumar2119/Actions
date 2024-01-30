@@ -27,12 +27,12 @@ on:
           description: 'US DEV DEPLOY'
           type: boolean
           required: false
-          default: false
+          default: ${{ github.event.inputs.us-lower }}
         us-qa-deploy:
           description: 'US QA DEPLOY'
           type: boolean
           required: false
-          default: false        
+          default: ${{ github.event.inputs.us-lower }}        
         us-stg-deploy:
           description: 'US STG DEPLOY'
           type: boolean
