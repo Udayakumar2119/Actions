@@ -62,19 +62,19 @@ jobs:
         uses: actions/checkout@v2
   US_LOWER:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.us-lower == 'true' }}
+    if: ${{ github.event.inputs.us-lower == 'true' || github.event.inputs.deploy-all == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
   NON_PRD:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.non-prd == 'true' }}
+    if: ${{ github.event.inputs.non-prd == 'true' || github.event.inputs.deploy-all == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
   PRD:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.prd == 'true' }}
+    if: ${{ github.event.inputs.prd == 'true' || github.event.inputs.deploy-all == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2                
