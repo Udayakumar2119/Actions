@@ -1,0 +1,164 @@
+name: DD 12345
+run-name: ${{ github.actor }} is Datadog Agent on DS AKS Clusters from ${{ github.ref_name }} branch
+on:
+  workflow_dispatch:
+    inputs:
+        deploy-all:
+          description: 'DEPLOY ALL CLUSTERS'
+          type: boolean
+          required: false
+          default: false    
+        us-dev-deploy:
+          description: 'US DEV DEPLOY'
+          type: boolean
+          required: false
+          default: false
+        us-qa-deploy:
+          description: 'US QA DEPLOY'
+          type: boolean
+          required: false
+          default: false        
+        us-stg-deploy:
+          description: 'US STG DEPLOY'
+          type: boolean
+          required: false
+          default: false
+        we-stg-deploy:
+          description: 'WE STG DEPLOY'
+          type: boolean
+          required: false
+          default: false
+        us-prd-deploy:
+          description: 'US PRD DEPLOY'
+          type: boolean
+          required: false
+          default: false
+        we-prd-deploy:
+          description: 'WE PRD DEPLOY'
+          type: boolean
+          required: false
+          default: false
+        au-prd-deploy:
+          description: 'AU PRD DEPLOY'
+          type: boolean
+          required: false
+          default: false
+        sg-prd-deploy:
+          description: 'SG PRD DEPLOY'
+          type: boolean
+          required: false
+          default: false
+          
+jobs:
+  DEPLOY_ALL:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.deploy-all == 'true' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+  DEPLOY_LOWER:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.deploy-all == 'true' || github.event.inputs.us-dev-deploy == 'true' || github.event.inputs.us-qa-deploy == 'true' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+  DEPLOY_NON-PROD:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.deploy-all == 'true' || github.event.inputs.us-stg-deploy == 'true' || github.event.inputs.we-stg-deploy == 'true' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+  DEPLOY_PROD:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.deploy-all == 'true' || github.event.inputs.us-prd-deploy == 'true' || github.event.inputs.we-prd-deploy == 'true' || github.event.inputs.au-prd-deploy == 'true' || github.event.inputs.sg-prd-deploy == 'true' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2                        
+
+  US_DEV_DEPLOY:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.us-dev-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: DEPLOY_LOWER
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+  US_QA_DEPLOY:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.us-qa-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: DEPLOY_LOWER
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        ##Clear all kubeconfigs
+        ##fetch QA Kubeconfig
+        ##validate QA kubeconfig
+
+  US_STG_DEPLOY:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.us-stg-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: DEPLOY_NON-PROD        
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        ##Clear all kubeconfigs
+        ##fetch QA Kubeconfig
+        ##validate QA kubeconfig
+
+  WE_STG_DEPLOY:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.we-stg-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: DEPLOY_NON-PROD
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        ##Clear all kubeconfigs
+        ##fetch QA Kubeconfig
+        ##validate QA kubeconfig
+
+  US_PRD_DEPLOY:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.us-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: DEPLOY_PROD       
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        ##Clear all kubeconfigs
+        ##fetch QA Kubeconfig
+        ##validate QA kubeconfig
+
+  WE_PRD_DEPLOY:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.we-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: DEPLOY_PROD       
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        ##Clear all kubeconfigs
+        ##fetch QA Kubeconfig
+        ##validate QA kubeconfig
+
+  AU_PRD_DEPLOY:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.au-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: DEPLOY_PROD        
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        ##Clear all kubeconfigs
+        ##fetch QA Kubeconfig
+        ##validate QA kubeconfig
+
+  SG_PRD_DEPLOY:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.sg-prd-deploy == 'true' || github.event.inputs.deploy-all == 'true' }}
+    needs: DEPLOY_PROD      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        ##Clear all kubeconfigs
+        ##fetch QA Kubeconfig
+        ##validate QA kubeconfig
